@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 
 class Webservice {
-  static const String baseurl = "https://192.168.126.238/expense/api/"; //laptop
+  static const String baseurl = "http://192.168.126.238/expense/api/"; //laptop
   // static const String baseurl = "http://192.168.43.237/expense/api/"; //vaju
   // static const String baseurl = "http://vajumakwana.epizy.com/expense/api/";
 
@@ -88,24 +88,18 @@ class Webservice {
 
   static Future setUser(User user) async {
     final json = jsonEncode(user.toJson());
-
-    Webservice.printMag("set");
     await pref!.setString('user', json);
-    Webservice.printMag("seted");
   }
 
   static User getUser() {
-    Webservice.printMag("set user");
     final json = pref!.getString('user');
     if (json == null) {
       throw 'User not found';
     }
-    Webservice.printMag("seted user");
     return User.fromJson(jsonDecode(json));
   }
 
   static bool isUserSeted() {
-    Webservice.printMag("is seted");
     if (pref!.containsKey('user')) {
       return true;
     }
@@ -113,7 +107,6 @@ class Webservice {
   }
 
   static initUser() {
-    Webservice.printMag("init user ");
     if (isUserSeted()) {
       uid = getUser().id;
       name = getUser().name;

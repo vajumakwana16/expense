@@ -1,4 +1,4 @@
- import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
@@ -42,7 +42,7 @@ class AuthenticationProvider with ChangeNotifier {
     late List<BiometricType> availableBiometrics;
     try {
       availableBiometrics = await auth!.getAvailableBiometrics();
-    }  catch (e) {
+    } catch (e) {
       availableBiometrics = <BiometricType>[];
       // print(e);
     }
@@ -61,7 +61,7 @@ class AuthenticationProvider with ChangeNotifier {
       );
       // print(authenticated);
     } on PlatformException catch (e) {
-      // print(e);
+      print(e);
       authenticated = false;
       return;
     }

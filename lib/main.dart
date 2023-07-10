@@ -27,7 +27,7 @@ import 'utils/utils.dart';
 import 'widgets/new_transaction.dart';
 
 bool authEnabled = false;
-bool? is_first;
+late bool is_first;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Webservice.init();
@@ -35,12 +35,11 @@ void main() async {
       .then((value) => {authEnabled = value});
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   is_first = Webservice.pref?.getString('is_first') != '1' ? false : true;
-  runApp(MyApp(isfirst: is_first!));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final bool isfirst;
-  const MyApp({Key? key, required this.isfirst}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +52,10 @@ class MyApp extends StatelessWidget {
         ],
         child: Consumer<ThemeProvider>(
             builder: (ctx, themeProvider, _) => MaterialApp(
-                  title: 'E-XPENSE',
+                  title: 'EXPENSE',
                   theme: MyTheme.dynamicTheme(context,
                       themeProvider.currenttheme, themeProvider.isDarkMode),
-                  home: isfirst == false
+                  home: is_first == false
                       ? OnBoarding()
                       : Consumer<AuthenticationProvider>(
                           builder: (ctx, authProvider, _) => authEnabled
@@ -65,16 +64,14 @@ class MyApp extends StatelessWidget {
                                   ? const ScreenAuthentication()
                                   : Consumer<TxnProvider>(
                                       builder: (ctx, txnProvider, _) => Main(
-                                            bottomNavIndex: 0,
-                                            txnProvider: txnProvider,
-                                          )))),
+                                          bottomNavIndex: 0,
+                                          txnProvider: txnProvider)))),
                   debugShowCheckedModeBanner: false,
                   routes: {
                     Approutes.main: (context) => Main(
-                          bottomNavIndex: 0,
-                          txnProvider:
-                              Provider.of<TxnProvider>(context, listen: true),
-                        ),
+                        bottomNavIndex: 0,
+                        txnProvider:
+                            Provider.of<TxnProvider>(context, listen: true)),
                     Approutes.login: (context) => const ScreenAuthentication(),
                     Approutes.verification: (context) => const Varification(),
                     Approutes.phoneauth: (context) => const PhoneAuthScreen(),
