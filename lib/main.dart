@@ -34,7 +34,9 @@ void main() async {
   await Webservice.prefgetBool('usefingerprint')
       .then((value) => {authEnabled = value});
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  is_first = Webservice.pref?.getString('is_first') != '1' ? false : true;
+  await Webservice.prefgetBool('is_first').then((value) => {is_first = value});
+  print("object");
+  print(Webservice.pref?.getBool('is_first'));
   runApp(const MyApp());
 }
 

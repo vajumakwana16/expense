@@ -34,13 +34,13 @@ dependencies:
   flutter_slidable: ^2.0.0
   http: ^1.1.0
   lottie: ^1.4.3
-  # file_picker: ^5.3.2
 
 
   #firebase
   firebase_core: ^2.14.0
   firebase_auth: ^4.6.3
   firebase_messaging: ^14.6.4
+  image_picker: ^1.0.2
 
 dependency_overrides:
 #  image_cropper_platform_interface: ^5.0.0

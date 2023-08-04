@@ -4,32 +4,6 @@ import 'package:lottie/lottie.dart';
 
 const Color darkBlue = Color.fromARGB(255, 18, 32, 47);
 
-void main() {
-  runApp(onBoarding());
-}
-
-class onBoarding extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: darkBlue),
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: OnBoarding(),
-        ),
-      ),
-    );
-  }
-}
-
-class MyWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Text('Hello, World!', style: Theme.of(context).textTheme.bodyMedium);
-  }
-}
-
 class OnBoarding extends StatefulWidget {
   @override
   _OnBoardingState createState() => _OnBoardingState();
@@ -182,8 +156,10 @@ class _OnBoardingState extends State<OnBoarding> with TickerProviderStateMixin {
                           color: Colors.white,
                           size: 60,
                         ),
-                        onPressed: () {
-                          Webservice.pref!.setString('is_first', "1");
+                        onPressed: () async {
+                          await Webservice.pref!.setBool('is_first', true);
+                          print("object");
+                          print(Webservice.pref?.getBool('is_first'));
                           Navigator.pushReplacementNamed(context, '/login');
                         },
                       )

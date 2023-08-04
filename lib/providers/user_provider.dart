@@ -273,7 +273,8 @@ class UserProvider with ChangeNotifier {
       // if (response.statusCode == 200) {
       var getingresponse = await response.stream.toBytes();
       final responseData = json.decode(String.fromCharCodes(getingresponse));
-
+      print("responseData.toString()");
+      print(responseData.toString());
       final status = responseData['status'];
       final msg = responseData['msg'];
       if (status == 0) {
@@ -281,7 +282,7 @@ class UserProvider with ChangeNotifier {
       } else if (status == 1) {
         final profileimage =
             responseData['data']['profile']['profile_image'] == ''
-                ? '0'
+                ? responseData['profile_img_url'].toString() + "placeholder.jpg"
                 : responseData['profile_img_url'].toString() +
                     responseData['data']['profile']['profile_image'].toString();
         final oldUser = Webservice.getUser();

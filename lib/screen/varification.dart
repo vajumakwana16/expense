@@ -130,7 +130,7 @@ class _VarificationState extends State<Varification> {
 
               //submit
               Center(
-                child: Utils.buildButton(context, () async {
+                child: Utils.buildLoginButton(context, () async {
                   if (_formKey.currentState!.validate()) {
                     FocusScope.of(context).unfocus();
                     _initValues['code'] = controllerCode.text;
@@ -201,7 +201,7 @@ class _VarificationState extends State<Varification> {
                           });
                     }
                   }
-                }, 'Verify Code', true),
+                }, 'Verify Code'),
               ),
               const SizedBox(
                 height: 20,
@@ -218,23 +218,13 @@ class _VarificationState extends State<Varification> {
                 ),
 
                 //sign in
-                TextButton(
-                    onPressed: () {
-                      setState(() {
-                        // if (_authMode == AuthMode.Signup) {
-                        //   _authMode = AuthMode.Login;
-                        // } else {
-                        //   _authMode = AuthMode.Signup;
-                        // }
-                      });
-                    },
-                    child: Center(
-                        child: TextButton(
-                      child: const Text('Resend Code'),
-                      onPressed: () async {
-                        await _verifyPhoneNumber();
-                      },
-                    )))
+                Center(
+                    child: TextButton(
+                  child: const Text('Resend Code'),
+                  onPressed: () async {
+                    await _verifyPhoneNumber();
+                  },
+                ))
               ]),
             ],
           ),

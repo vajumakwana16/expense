@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 
 class Webservice {
-  static const String baseurl = "http://192.168.126.238/expense/api/"; //laptop
+  static const String baseurl = "http://192.168.227.247/expense/api/"; //laptop
   // static const String baseurl = "http://192.168.43.237/expense/api/"; //vaju
   // static const String baseurl = "http://vajumakwana.epizy.com/expense/api/";
 
