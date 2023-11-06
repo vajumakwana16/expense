@@ -45,6 +45,13 @@
             {
               "client_id": "804771459012-alglmmnb652lmtg4ucjl54q2f4l1sip7.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "804771459012-1g4uhnpf7fqrmqhd13qrv4jle8reqq3u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vm.expense"
+              }
             }
           ]
         }
@@ -58,6 +65,22 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "804771459012-1atnem4pc8sa5gotp83gp7i2p12cvt3v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vm.expense",
+            "certificate_hash": "186724cdf664be78286babaf595f7b43ae565ca7"
+          }
+        },
+        {
+          "client_id": "804771459012-lm7jborj7gpplqsni4fvuqkov77uqmbq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vm.expense",
+            "certificate_hash": "f3aea4f3c90dea824ba108b6445f1892b1e62162"
+          }
+        },
         {
           "client_id": "804771459012-alglmmnb652lmtg4ucjl54q2f4l1sip7.apps.googleusercontent.com",
           "client_type": 3
@@ -74,6 +97,13 @@
             {
               "client_id": "804771459012-alglmmnb652lmtg4ucjl54q2f4l1sip7.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "804771459012-1g4uhnpf7fqrmqhd13qrv4jle8reqq3u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vm.expense"
+              }
             }
           ]
         }

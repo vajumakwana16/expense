@@ -1,3 +1,5 @@
+import 'package:sms_autofill/sms_autofill.dart';
+
 import '../providers/theme_previder.dart';
 import '../providers/txn_provider.dart';
 import '../providers/user_provider.dart';
@@ -42,7 +44,12 @@ class _VarificationState extends State<Varification> {
 
   @override
   void initState() {
+    listen();
     super.initState();
+  }
+
+  listen() async {
+    await SmsAutoFill().listenForCode();
   }
 
   @override
@@ -110,13 +117,21 @@ class _VarificationState extends State<Varification> {
               ),
               const SizedBox(height: 20),
               //enter code
+              PinFieldAutoFill(
+                  // decoration: // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
+                  currentCode: controllerCode.text, // prefill with a code
+                  onCodeSubmitted: (code) {
+                    controllerCode.text = code;
+                  }, //code submitted callback
+                  onCodeChanged: (code) {
+                    controllerCode.text = code!;
+                  }, //code changed callback
+                  codeLength: 6 //code length, default 6
+                  ),
               buildformfield(
                 controllerCode,
                 'Enter Code',
-                const Icon(
-                  Icons.lock,
-                  size: 26,
-                ),
+                const Icon(Icons.lock, size: 26),
                 (code) {
                   if (code!.isEmpty) {
                     return 'Please Enter Code';
@@ -207,15 +222,11 @@ class _VarificationState extends State<Varification> {
                 height: 20,
               ),
 
-              const Spacer(),
-
               //have account ?
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 const Center(child: Text('Didn\'t Recieve Code ?')),
 
-                const SizedBox(
-                  height: 1,
-                ),
+                const SizedBox(height: 1),
 
                 //sign in
                 Center(

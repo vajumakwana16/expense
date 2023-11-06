@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -60,6 +61,8 @@ class UserProvider with ChangeNotifier {
           phoneNumber: '${Webservice.cntCode}$uphone',
           verificationCompleted: (phoneAuthCredential) async {
             // ShowErrorDialog(phoneAuthCredential.toString());
+            log("phoneAuthCredential : ${phoneAuthCredential.toString()}");
+            log("phoneAuthCredential : ${phoneAuthCredential.smsCode}");
           },
           verificationFailed: (verificationFailed) async {
             Utils.showErrorDialog(context, verificationFailed.toString());

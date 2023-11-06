@@ -2,29 +2,24 @@ import 'package:expense/providers/txn_provider.dart';
 import 'package:expense/screen/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:avatar_glow/avatar_glow.dart';
-import '../models/transaction.dart';
 import '../providers/theme_previder.dart';
 import '../providers/user_provider.dart';
-import '../screen/detail_page.dart';
 import '../screen/fixed_transactions.dart';
 import '../screen/home.dart';
-import '../screen/varification.dart';
 import '../screen/on_boarding.dart';
-import '../utils/app_routes.dart';
 import '../utils/webservice.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../utils/contextServise.dart';
-import 'firebase_options.dart';
 import 'providers/authentication_provider.dart';
 import 'screen/profile.dart';
 import 'screen/settings.dart';
 import 'utils/utils.dart';
 import 'widgets/new_transaction.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 bool authEnabled = false;
 late bool is_first;
@@ -33,8 +28,14 @@ void main() async {
   await Webservice.init();
   await Webservice.prefgetBool('usefingerprint')
       .then((value) => {authEnabled = value});
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Webservice.prefgetBool('is_first').then((value) => {is_first = value});
+  await Firebase.initializeApp();
+
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.playIntegrity,
+    // appleProvider: AppleProvider.appAttest,
+  );
+
+  is_first = await Webservice.prefgetBool('is_first') == null ? false : true;
   print("object");
   print(Webservice.pref?.getBool('is_first'));
   runApp(const MyApp());
@@ -69,7 +70,7 @@ class MyApp extends StatelessWidget {
                                           bottomNavIndex: 0,
                                           txnProvider: txnProvider)))),
                   debugShowCheckedModeBanner: false,
-                  routes: {
+                  /* routes: {
                     Approutes.main: (context) => Main(
                         bottomNavIndex: 0,
                         txnProvider:
@@ -88,7 +89,7 @@ class MyApp extends StatelessWidget {
                             type: "expense")),
                     Approutes.profile: (context) => const Profile(),
                     Approutes.settings: (context) => const Settings(),
-                  },
+                  },*/
                 )));
   }
 }

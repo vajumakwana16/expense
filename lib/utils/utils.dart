@@ -420,7 +420,10 @@ class Utils {
                 imageUrl: profileImage,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     CircularProgressIndicator(value: downloadProgress.progress),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+                errorWidget: (context, url, error) {
+                  print("error : $error");
+                  return const Icon(Icons.error);
+                },
               ),
             ),
           ),

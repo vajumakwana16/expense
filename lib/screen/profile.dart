@@ -51,6 +51,9 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     profileImage = Webservice.profileimage;
+
+    print("profileImage");
+    print(profileImage);
     final mediaQuery = MediaQuery.of(context);
     final height = mediaQuery.size.height;
     final width = mediaQuery.size.width;
@@ -67,8 +70,7 @@ class _ProfileState extends State<Profile> {
           padding: EdgeInsets.symmetric(horizontal: width * 0.05),
           children: [
             Utils.buildProfileImagewithShadow(
-                context, Webservice.profileimage, height * 0.7, width * 0.35,
-                () async {
+                context, profileImage, height * 0.7, width * 0.35, () async {
               final result =
                   await picker.pickImage(source: ImageSource.gallery);
               if (result != null) {
