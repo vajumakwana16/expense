@@ -1,5 +1,8 @@
+import 'package:expense/models/transaction.dart';
 import 'package:expense/providers/txn_provider.dart';
 import 'package:expense/screen/auth.dart';
+import 'package:expense/screen/detail_page.dart';
+import 'package:expense/screen/varification.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
@@ -17,6 +20,7 @@ import '../utils/contextServise.dart';
 import 'providers/authentication_provider.dart';
 import 'screen/profile.dart';
 import 'screen/settings.dart';
+import 'utils/app_routes.dart';
 import 'utils/utils.dart';
 import 'widgets/new_transaction.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -32,7 +36,7 @@ void main() async {
 
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
-    // appleProvider: AppleProvider.appAttest,
+    appleProvider: AppleProvider.appAttest,
   );
 
   is_first = await Webservice.prefgetBool('is_first') == null ? false : true;
@@ -55,7 +59,7 @@ class MyApp extends StatelessWidget {
         ],
         child: Consumer<ThemeProvider>(
             builder: (ctx, themeProvider, _) => MaterialApp(
-                  title: 'EXPENSE',
+                  title: 'E-XPENSE',
                   theme: MyTheme.dynamicTheme(context,
                       themeProvider.currenttheme, themeProvider.isDarkMode),
                   home: is_first == false
@@ -70,26 +74,25 @@ class MyApp extends StatelessWidget {
                                           bottomNavIndex: 0,
                                           txnProvider: txnProvider)))),
                   debugShowCheckedModeBanner: false,
-                  /* routes: {
-                    Approutes.main: (context) => Main(
-                        bottomNavIndex: 0,
-                        txnProvider:
-                            Provider.of<TxnProvider>(context, listen: true)),
+                  routes: {
+                    Approutes.main: (context) => Consumer<TxnProvider>(
+                        builder: (ctx, txnProvider, _) =>
+                            Main(bottomNavIndex: 0, txnProvider: txnProvider)),
+                    Approutes.home: (context) => const Home(),
+                    Approutes.auth: (context) => const PhoneAuthScreen(),
                     Approutes.login: (context) => const ScreenAuthentication(),
                     Approutes.verification: (context) => const Varification(),
-                    Approutes.phoneauth: (context) => const PhoneAuthScreen(),
-                    Approutes.home: (context) => const Home(),
-                    Approutes.detail: (context) => DetailPage(
-                        txn: Transaction(
-                            id: "1",
-                            title: "title",
-                            amount: 120,
-                            note: "test note",
-                            date: DateTime.now(),
-                            type: "expense")),
                     Approutes.profile: (context) => const Profile(),
                     Approutes.settings: (context) => const Settings(),
-                  },*/
+                    Approutes.detail: (context) => DetailPage(
+                        txn: Transaction(
+                            id: "0",
+                            title: "title",
+                            amount: 1.0,
+                            date: DateTime.now(),
+                            type: "Expense",
+                            note: "note")),
+                  },
                 )));
   }
 }
@@ -326,13 +329,9 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
               decoration: Utils.buildBoxDecoration(context, 50, Colors.black),
               child: FloatingActionButton(
                 materialTapTargetSize: MaterialTapTargetSize.padded,
-                heroTag: null,
                 elevation: 0,
                 splashColor: Colors.lightBlue,
-                child: const Icon(
-                  Icons.add_circle,
-                  color: Colors.white,
-                ),
+                child: const Icon(Icons.add_circle, color: Colors.white),
                 onPressed: () {
                   _startNewAddTransaction(context);
                 },

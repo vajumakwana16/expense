@@ -1,4 +1,4 @@
- import '../providers/txn_provider.dart';
+import '../providers/txn_provider.dart';
 import '../utils/utils.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -52,18 +52,14 @@ class _TransactionListState extends State<TransactionList>
         ? LayoutBuilder(builder: (ctx, constraints) {
             return Column(
               children: <Widget>[
-                const SizedBox(
-                  height: 30,
-                ),
+                const SizedBox(height: 30),
                 Text(
                   fromHome
                       ? "No transaction added yet!"
                       : "No Fixed transaction added yet!",
                   style: Theme.of(context).appBarTheme.titleTextStyle,
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 SizedBox(
                   height: constraints.maxHeight * 0.6,
                   child: Padding(
@@ -92,6 +88,7 @@ class _TransactionListState extends State<TransactionList>
                   return txnProvider.notifyList();
                 },
                 child: ListView.builder(
+                    shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
                     controller:
                         txnList.length > 10 ? widget.scrollController : null,

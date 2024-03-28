@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../utils/webservice.dart';
 
@@ -87,16 +87,17 @@ class MyTheme {
         textTheme: const TextTheme(
             bodyLarge: TextStyle(
           fontFamily: 'Quicksand',
-          fontSize: 20,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
         )),
         appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
             fontFamily: 'Quicksand',
-            fontSize: 20,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
         ),
+        useMaterial3: false,
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             enableFeedback: true,
             landscapeLayout: null,
@@ -107,111 +108,119 @@ class MyTheme {
 
   //dark
   static ThemeData darkTheme(BuildContext context) => ThemeData(
-        brightness: Brightness.dark,
-        //accentColor: Colors.cyan,
+      useMaterial3: false,
+      brightness: Brightness.dark,
+      //accentColor: Colors.cyan,
+      fontFamily: 'Quicksand',
+      textTheme: const TextTheme(
+          bodyLarge: TextStyle(
         fontFamily: 'Quicksand',
-        textTheme: const TextTheme(
-            bodyLarge: TextStyle(
-          fontFamily: 'Quicksand',
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        )),
-        appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.cyan,
-            titleTextStyle: TextStyle(
-              fontFamily: 'Quicksand',
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            )),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            enableFeedback: true,
-            backgroundColor: Colors.cyan,
-            selectedItemColor: Colors.white),
-      );
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      )),
+      appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.cyan,
+          titleTextStyle: TextStyle(
+            fontFamily: 'Quicksand',
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          )),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          enableFeedback: true,
+          backgroundColor: Colors.cyan,
+          selectedItemColor: Colors.white),
+      floatingActionButtonTheme:
+          FloatingActionButtonThemeData(backgroundColor: Colors.cyan));
 
   //purple
   static ThemeData purpleTheme(BuildContext context, isDarkMode) => ThemeData(
-        brightness: isDarkMode ? Brightness.dark : Brightness.light,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        primarySwatch: Colors.purple,
-        //accentColor: Colors.purple,
+      useMaterial3: false,
+      brightness: isDarkMode ? Brightness.dark : Brightness.light,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      primarySwatch: Colors.purple,
+      //accentColor: Colors.purple,
+      fontFamily: 'Quicksand',
+      textTheme: const TextTheme(
+          bodyLarge: TextStyle(
         fontFamily: 'Quicksand',
-        textTheme: const TextTheme(
-            bodyLarge: TextStyle(
-          fontFamily: 'Quicksand',
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        )),
-        appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.purple,
-            titleTextStyle: TextStyle(
-              fontFamily: 'Quicksand',
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            )),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            enableFeedback: true,
-            landscapeLayout: null,
-            type: BottomNavigationBarType.shifting,
-            backgroundColor: Colors.purple,
-            selectedItemColor: Colors.white),
-      );
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      )),
+      appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.purple,
+          titleTextStyle: TextStyle(
+            fontFamily: 'Quicksand',
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          )),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          enableFeedback: true,
+          landscapeLayout: null,
+          type: BottomNavigationBarType.shifting,
+          backgroundColor: Colors.purple,
+          selectedItemColor: Colors.white),
+      floatingActionButtonTheme:
+          FloatingActionButtonThemeData(backgroundColor: Colors.purple));
 
   //red
   static ThemeData redTheme(BuildContext context, isDarkMode) => ThemeData(
-        brightness: isDarkMode ? Brightness.dark : Brightness.light,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        primarySwatch: Colors.red,
-        //accentColor: Colors.red,
+      useMaterial3: false,
+      brightness: isDarkMode ? Brightness.dark : Brightness.light,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      primarySwatch: Colors.red,
+      //accentColor: Colors.red,
+      fontFamily: 'Quicksand',
+      textTheme: const TextTheme(
+          bodyLarge: TextStyle(
         fontFamily: 'Quicksand',
-        textTheme: const TextTheme(
-            bodyLarge: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      )),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.red,
+        titleTextStyle: TextStyle(
           fontFamily: 'Quicksand',
-          fontSize: 20,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
-        )),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.red,
-          titleTextStyle: TextStyle(
-            fontFamily: 'Quicksand',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
         ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            enableFeedback: true,
-            landscapeLayout: null,
-            type: BottomNavigationBarType.shifting,
-            backgroundColor: Colors.red,
-            selectedItemColor: Colors.white),
-      );
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          enableFeedback: true,
+          landscapeLayout: null,
+          type: BottomNavigationBarType.shifting,
+          backgroundColor: Colors.red,
+          selectedItemColor: Colors.white),
+      floatingActionButtonTheme:
+          FloatingActionButtonThemeData(backgroundColor: Colors.red));
 
   //green
   static ThemeData greenTheme(BuildContext context, isDarkMode) => ThemeData(
-        brightness: isDarkMode ? Brightness.dark : Brightness.light,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        primarySwatch: Colors.green,
-        //accentColor: Colors.green,
+      useMaterial3: false,
+      brightness: isDarkMode ? Brightness.dark : Brightness.light,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      primarySwatch: Colors.green,
+      //accentColor: Colors.green,
+      fontFamily: 'Quicksand',
+      textTheme: const TextTheme(
+          bodyLarge: TextStyle(
         fontFamily: 'Quicksand',
-        textTheme: const TextTheme(
-            bodyLarge: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      )),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.green,
+        titleTextStyle: TextStyle(
           fontFamily: 'Quicksand',
-          fontSize: 20,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
-        )),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.green,
-          titleTextStyle: TextStyle(
-            fontFamily: 'Quicksand',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
         ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            enableFeedback: true,
-            landscapeLayout: null,
-            type: BottomNavigationBarType.shifting,
-            backgroundColor: Colors.green,
-            selectedItemColor: Colors.white),
-      );
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          enableFeedback: true,
+          landscapeLayout: null,
+          type: BottomNavigationBarType.shifting,
+          backgroundColor: Colors.green,
+          selectedItemColor: Colors.white),
+      floatingActionButtonTheme:
+          FloatingActionButtonThemeData(backgroundColor: Colors.green));
 }

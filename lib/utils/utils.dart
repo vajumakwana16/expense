@@ -1,16 +1,21 @@
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
+
 import 'package:expense/utils/webservice.dart';
 import 'package:flutter/material.dart';
 import 'package:list_tile_switch/list_tile_switch.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'app_routes.dart';
 
 enum DeviceType { isTablet, isMobile, isWeb }
 
 class Utils {
   Utils._();
+
+  //navigation
+  goTOScreen(String screen) {}
 
   //screen background
   static screenBg(BuildContext context) => Container(
@@ -121,7 +126,9 @@ class Utils {
             Center(
                 child: Text(
               'Balance : ' +
-                  Webservice.formateNumber(double.parse(Webservice.balance)) +
+                  Webservice.formateNumber(Webservice.balance.isEmpty
+                      ? 0
+                      : double.parse(Webservice.balance)) +
                   "  ",
               style: const TextStyle(color: Colors.white),
             ))
@@ -407,28 +414,29 @@ class Utils {
             tag: "profile_image",
             child: InkWell(
               onTap: onImageTap,
-              child: CachedNetworkImage(
-                imageBuilder: (context, imageProvider) => Container(
-                  alignment: Alignment.center,
-                  height: height * 0.2,
-                  width: height * 0.2,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: imageProvider, fit: BoxFit.cover)),
-                ),
-                imageUrl: profileImage,
+              child:
+                  // CachedNetworkImage(imageBuilder: (context, imageProvider) =>
+                  Container(
+                alignment: Alignment.center,
+                height: height * 0.2,
+                width: height * 0.2,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: NetworkImage(profileImage), fit: BoxFit.cover)),
+              ),
+              /* imageUrl: profileImage,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     CircularProgressIndicator(value: downloadProgress.progress),
                 errorWidget: (context, url, error) {
                   print("error : $error");
                   return const Icon(Icons.error);
-                },
-              ),
+                },*/
             ),
           ),
         ),
       ),
+      // ),
     );
   }
 
@@ -661,5 +669,59 @@ class Utils {
                 ),
               )));
         });
+  }
+
+  //update app
+  static showUpdateDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            icon: Icon(Icons.update,
+                size: 30, color: Theme.of(context).primaryColor),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: const Text('App Update Available'),
+            content: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'A new version of the app is available.',
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                SizedBox(height: 16.0),
+                Text(
+                  'Please update for the latest features and improvements.',
+                  style: TextStyle(fontSize: 14.0),
+                ),
+              ],
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: <Widget>[
+              buildLoginButton(context, openPlayOrAppStore, 'Update Now')
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  static void openPlayOrAppStore() {
+    if (Platform.isAndroid || Platform.isIOS) {
+      final appId = Platform.isAndroid ? 'com.vm.expense' : 'com.vm.expense';
+      final url = Uri.parse(
+        Platform.isAndroid
+            ? "market://details?id=$appId"
+            : "https://apps.apple.com/app/id$appId",
+      );
+      launchUrl(
+        url,
+        mode: LaunchMode.externalApplication,
+      );
+    }
   }
 }

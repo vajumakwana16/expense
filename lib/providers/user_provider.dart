@@ -27,6 +27,9 @@ class UserProvider with ChangeNotifier {
 
   //CheckPhoneExist
   Future checkPhoneExist(String userphone) async {
+    if (Webservice.developerMode) {
+      return true;
+    }
     final checkPhoneExist =
         "${Webservice.baseurl}?action=CheckPhoneExists&phone=$userphone&app_version=${Webservice.appversion}&app_token=${Webservice.apptoken}&device_type=a";
     final url = Uri.parse(checkPhoneExist);
@@ -53,6 +56,36 @@ class UserProvider with ChangeNotifier {
       String name, String email, String uphone, int mode) async {
     if (kDebugMode) {
       print("verify : " + cntCode + name + email + uphone + mode.toString());
+    }
+
+    if (Webservice.developerMode) {
+      if (mode == 0) {
+        Future.delayed(Duration.zero, () {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => Varification(),
+              settings: RouteSettings(arguments: [
+                'Register',
+                "resendToken",
+                "verificationId",
+                uphone,
+                name,
+                email
+              ])));
+        });
+      } else {
+        Future.delayed(Duration.zero, () {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => Varification(),
+              settings: RouteSettings(arguments: [
+                'Login',
+                "resendToken",
+                "verificationId",
+                uphone,
+                name,
+                email
+              ])));
+        });
+      }
     }
 
     try {
@@ -140,7 +173,7 @@ class UserProvider with ChangeNotifier {
             email: responseData['data']['profile']['email'].toString(),
             phone: responseData['data']['profile']['phone'].toString(),
             cntCode: responseData['data']['profile']['cnt_code'].toString(),
-            balance: responseData['data']['profile']['total_balance'],
+            balance: responseData['data']['profile']['total_balance'] ?? "0",
             udid: udid.toString(),
             logintoken:
                 responseData['data']['profile']['login_token'].toString(),
@@ -199,14 +232,15 @@ class UserProvider with ChangeNotifier {
             phone: responseData['data']['profile']['phone'].toString(),
             cntCode: responseData['data']['profile']['cnt_code'].toString(),
             balance:
-                responseData['data']['profile']['total_balance'].toString(),
+                responseData['data']['profile']['total_balance'].toString() ??
+                    "",
             logintoken:
                 responseData['data']['profile']['login_token'].toString(),
             // isNotify: responseData['data']['profile']['is_notify'].toString(),
             profileimage: profileimage);
         await Webservice.pref!.clear();
         await Webservice.setUser(user);
-        Webservice.initUser();
+        await Webservice.initUser();
         return true;
       }
       if (status == 2) {
@@ -248,6 +282,10 @@ class UserProvider with ChangeNotifier {
         } else if (status == 2) {
           Utils.buildshowTopSnackBar(context!, Icons.close, msg, 'error');
           sessionExpired(context);
+        }
+        if (status == 3) {
+          Utils.buildSnackbar(context!, msg);
+          return msg;
         }
       }
     } catch (e) {
@@ -305,6 +343,10 @@ class UserProvider with ChangeNotifier {
       } else if (status == 2) {
         Utils.buildshowTopSnackBar(context, Icons.info, msg, 'error');
         // sessionExpired(context);
+      }
+      if (status == 3) {
+        Utils.buildSnackbar(context!, msg);
+        return msg;
       }
     } catch (e) {
       Utils.buildshowTopSnackBar(context, Icons.info, e.toString(), 'error');

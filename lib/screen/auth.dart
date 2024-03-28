@@ -131,6 +131,12 @@ class _AuthCardState extends State<AuthCard>
   double cheight = 500;
 
   @override
+  void initState() {
+    if (Webservice.developerMode) controllerPhone.text = "9537962565";
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final userProvider = Provider.of<UserProvider>(context);
@@ -185,7 +191,7 @@ class _AuthCardState extends State<AuthCard>
                   0);
             } else {
               Utils.buildshowTopSnackBar(
-                  context, Icons.no_accounts, 'Acount Not Exist', 'error');
+                  context, Icons.no_accounts, 'Account Not Exist', 'error');
             }
             setState(() => _isLoading = false);
           }

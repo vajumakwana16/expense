@@ -174,42 +174,45 @@ class _SettingsState extends State<Settings> {
                     }, SwitchType.cupertino)),
 
                 //monthly notification
-                Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    decoration: Utils.buildBoxDecoration(
-                        context, 10, Webservice.bgColor!),
-                    child: Utils.buildListTileSwitch(
-                        context,
-                        notificationSwitch
-                            ? Icons.notifications_active
-                            : Icons.notification_important_sharp,
-                        notificationSwitch,
-                        'Notifications', (value) {
-                      setState(() async {
-                        notificationSwitch = value;
-                        Webservice.pref!.setBool('notification', value);
-                        // NotificationHelper.showNotification();
-                        if (notificationSwitch) {
-                          try {
-                            // await NotificationHelper.showSheduledNotification(
-                            //     id: 0,
-                            //     title: "Your Monthly Transactions",
-                            //     body: "Hey! Remember your Pending Transactions",
-                            //     scheduledTime: DateTime.now(),
-                            //     payload: "fixed");
-                          } catch (e) {
-                            Utils.showErrorDialog(context, e.toString());
+                Visibility(
+                  visible: false,
+                  child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      decoration: Utils.buildBoxDecoration(
+                          context, 10, Webservice.bgColor!),
+                      child: Utils.buildListTileSwitch(
+                          context,
+                          notificationSwitch
+                              ? Icons.notifications_active
+                              : Icons.notification_important_sharp,
+                          notificationSwitch,
+                          'Notifications', (value) {
+                        setState(() async {
+                          notificationSwitch = value;
+                          Webservice.pref!.setBool('notification', value);
+                          // NotificationHelper.showNotification();
+                          if (notificationSwitch) {
+                            try {
+                              // await NotificationHelper.showSheduledNotification(
+                              //     id: 0,
+                              //     title: "Your Monthly Transactions",
+                              //     body: "Hey! Remember your Pending Transactions",
+                              //     scheduledTime: DateTime.now(),
+                              //     payload: "fixed");
+                            } catch (e) {
+                              Utils.showErrorDialog(context, e.toString());
+                            }
+                          } else {
+                            try {
+                              // await NotificationHelper.cancelNotification();
+                            } catch (e) {
+                              Utils.showErrorDialog(context, e.toString());
+                            }
                           }
-                        } else {
-                          try {
-                            // await NotificationHelper.cancelNotification();
-                          } catch (e) {
-                            Utils.showErrorDialog(context, e.toString());
-                          }
-                        }
-                      });
-                    }, SwitchType.cupertino)),
+                        });
+                      }, SwitchType.cupertino)),
+                ),
 
                 //about
                 Container(

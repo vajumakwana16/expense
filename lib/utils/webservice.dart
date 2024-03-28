@@ -16,6 +16,7 @@ class Webservice {
   static const String devicetype = "a";
   static const String apikey = "AIzaSyCKP4esBA80tJTkGIEYXdqwzimvpBAFf70";
 
+  static bool developerMode = true;
   static String balance = '';
   static String uid = "";
   static String name = "";

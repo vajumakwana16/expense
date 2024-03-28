@@ -4,7 +4,7 @@ description: A new Flutter project.
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.0.6+6
 
 environment:
   sdk: '>=3.0.5 <4.0.0'
@@ -30,11 +30,14 @@ dependencies:
   avatar_glow: ^2.0.2
   top_snackbar_flutter: ^2.1.1
   list_tile_switch: ^1.0.0
-  cached_network_image: ^3.2.2
+#  cached_network_image: ^3.2.2
+#  cached_network_image:
   flutter_slidable: ^2.0.0
   http: ^1.1.0
   lottie: ^1.4.3
   sms_autofill: ^2.3.0
+  flutter_riverpod:
+  url_launcher: ^6.2.1
 
   #firebase
   firebase_core: ^2.14.0
@@ -51,6 +54,13 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/expense.jpeg"
+  min_sdk_android: 21
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

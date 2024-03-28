@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
+import '../utils/app_routes.dart';
 import '../utils/contextServise.dart';
 import '../models/transaction.dart';
 import '../utils/utils.dart';
@@ -16,6 +17,12 @@ class TxnProvider with ChangeNotifier {
   void clearList() {
     usertransaction.clear();
     notifyListeners();
+  }
+
+  //session expire and go to login
+  sessionExpired(BuildContext context) {
+    Webservice.pref!.clear();
+    Navigator.of(context).pushReplacementNamed(Approutes.login);
   }
 
   Future<void> notifyList() async {
@@ -48,8 +55,16 @@ class TxnProvider with ChangeNotifier {
       final status = responseData['status'];
       final msg = responseData['msg'].toString();
       if (status == 0) {
-          Utils.buildshowTopSnackBar(context, Icons.close, msg, 'error');
+        Utils.buildshowTopSnackBar(context, Icons.close, msg, 'error');
         return;
+      } else if (status == 2) {
+        Utils.buildSnackbar(context!, msg);
+        sessionExpired(context);
+        return msg;
+      } else if (status == 3) {
+        Utils.showUpdateDialog(context);
+        Utils.buildSnackbar(context!, msg);
+        return msg;
       } else if (status == 1) {
         final user = Webservice.getUser();
         final newUser = user.copy(
@@ -95,6 +110,12 @@ class TxnProvider with ChangeNotifier {
         if (status == 0) {
           await Utils.buildshowTopSnackBar(context, Icons.close, msg, 'error');
           return;
+        } else if (status == 2) {
+          Utils.buildSnackbar(context!, msg);
+          sessionExpired(context);
+        } else if (status == 3) {
+          Utils.showUpdateDialog(context);
+          Utils.buildSnackbar(context!, msg);
         } else if (status == 1) {
           await Utils.buildshowTopSnackBar(
               NavigationService.navigatorKey.currentContext!,
@@ -150,6 +171,14 @@ class TxnProvider with ChangeNotifier {
         Webservice.initUser();
         notifyListeners();
         // Utils.buildshowTopSnackBar(context, Icons.close, msg, 'error');
+      } else if (status == 2) {
+        Utils.buildSnackbar(context!, msg);
+        sessionExpired(context);
+        return msg;
+      } else if (status == 3) {
+        Utils.showUpdateDialog(context);
+        Utils.buildSnackbar(context!, msg);
+        return msg;
       } else if (status == 1) {
         try {
           final balance = responseData['data']['balance']['total_balance'];
@@ -282,8 +311,13 @@ class TxnProvider with ChangeNotifier {
           Utils.showErrorDialog(context, e.toString());
         }
       } else if (status == 2) {
-        Utils.buildshowTopSnackBar(context, Icons.close, msg, 'error');
-        Utils.sessionExpired(context);
+        Utils.buildSnackbar(context!, msg);
+        sessionExpired(context);
+        return msg;
+      } else if (status == 3) {
+        Utils.showUpdateDialog(context);
+        Utils.buildSnackbar(context!, msg);
+        return msg;
       }
     } else {
       Utils.showErrorDialog(context, response.statusCode.toString());
@@ -311,8 +345,11 @@ class TxnProvider with ChangeNotifier {
           notifyListeners();
           return true;
         } else if (status == 2) {
-          Utils.buildshowTopSnackBar(context, Icons.close, msg, 'error');
-          Utils.sessionExpired(context);
+          Utils.buildSnackbar(context!, msg);
+          sessionExpired(context);
+        } else if (status == 3) {
+          Utils.showUpdateDialog(context);
+          Utils.buildSnackbar(context!, msg);
         }
       } else {}
     } catch (e) {

@@ -197,10 +197,10 @@ class _NewTransactionState extends State<NewTransaction> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: color),
+                    // style: ElevatedButton.styleFrom(foregroundColor: color),
                     onPressed: _submitData,
                     child: const Text(
-                      "Add Transcation",
+                      "Add Transaction",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
