@@ -4,13 +4,12 @@ import '../providers/theme_previder.dart';
 import '../providers/txn_provider.dart';
 import '../providers/user_provider.dart';
 import '../utils/app_routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-
 import '../utils/utils.dart';
 import '../utils/webservice.dart';
 
@@ -31,12 +30,13 @@ class _VarificationState extends State<Varification> {
   String phoneNumber = '';
 
   Map<String, String> userDetails = {'phone': ''};
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
   var _verificationId;
   final _formKey = GlobalKey<FormState>();
   final controllerCode = TextEditingController();
   var resendToken;
   var status = Status.waithing;
+  bool isLoading = false;
 
   var _initValues = {
     'code': '',
@@ -150,107 +150,104 @@ class _VarificationState extends State<Varification> {
 
               //submit
               Center(
-                child: Utils.buildLoginButton(context, () async {
-                  if (_formKey.currentState!.validate()) {
-                    FocusScope.of(context).unfocus();
-                    _initValues['code'] = controllerCode.text;
-                    // _sendCodetoFireBase(context, _verificationId,
-                    //     controllerCode.text.toString());
-                    if (Webservice.developerMode) {
-                      if (authType == 'Register') {
-                        userProvider
-                            .register(context, Webservice.cntCode, phoneNumber,
-                                name, email)
-                            .then((value) {
-                          if (value == true) {
-                            txnProvider.clearList();
-                            showSuccessSnack(
-                                context, 'Registered Successfully');
-                            Navigator.of(context)
-                                .pushReplacementNamed(Approutes.main);
-                          } else {
-                            Utils.showErrorDialog(context, value.toString());
-                          }
-                        });
-                      } else {
-                        userProvider.login(context, phoneNumber).then((value) {
-                          if (value == true) {
-                            txnProvider.clearList();
-                            showSuccessSnack(context, 'Login Successfully');
-                            Navigator.of(context)
-                                .pushReplacementNamed(Approutes.main);
-                          } else {
-                            Utils.showErrorDialog(context, value.toString());
-                          }
-                        });
-                      }
-                    } else {
-                      if (_verificationId != null) {
-                        var credential = PhoneAuthProvider.credential(
-                            verificationId: _verificationId,
-                            smsCode: controllerCode.text);
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : Utils.buildLoginButton(context, () async {
+                        if (_formKey.currentState!.validate()) {
+                          FocusScope.of(context).unfocus();
+                          _initValues['code'] = controllerCode.text;
 
-                        await _auth
-                            .signInWithCredential(credential)
-                            .then((value) {
-                              if (authType == 'Register') {
-                                userProvider
-                                    .register(context, Webservice.cntCode,
-                                        phoneNumber, name, email)
-                                    .then((value) {
-                                  if (value == true) {
-                                    txnProvider.clearList();
-                                    showSuccessSnack(
-                                        context, 'Registered Successfully');
-                                    Navigator.of(context)
-                                        .pushReplacementNamed(Approutes.main);
-                                  } else {
-                                    Utils.showErrorDialog(
-                                        context, value.toString());
-                                  }
-                                });
+                          if (Webservice.developerMode) {
+                            if (authType == 'Register') {
+                              await userProvider
+                                  .register(context, null, Webservice.cntCode,
+                                      phoneNumber, name, email)
+                                  .then((value) {
+                                if (value == true) {
+                                  txnProvider.clearList();
+                                  showSuccessSnack(
+                                      context, 'Registered Successfully');
+                                  Navigator.of(context)
+                                      .pushReplacementNamed(Approutes.main);
+                                } else {
+                                  Utils.showErrorDialog(
+                                      context, value.toString());
+                                }
+                              });
+                            } else {
+                              await userProvider
+                                  .login(context, null, phoneNumber)
+                                  .then((value) {
+                                if (value == true) {
+                                  txnProvider.clearList();
+                                  showSuccessSnack(
+                                      context, 'Login Successfully');
+                                  Navigator.of(context)
+                                      .pushReplacementNamed(Approutes.main);
+                                } else {
+                                  Utils.showErrorDialog(
+                                      context, value.toString());
+                                }
+                              });
+                            }
+                          } else {
+                            if (_verificationId != null) {
+                              setState(() => isLoading = true);
+
+                              var credential =
+                                  auth.PhoneAuthProvider.credential(
+                                      verificationId: _verificationId,
+                                      smsCode: controllerCode.text);
+
+                              final result =
+                                  await _auth.signInWithCredential(credential);
+                              if (result.user != null) {
+                                if (authType == 'Register') {
+                                  await userProvider
+                                      .register(
+                                          context,
+                                          result.user ?? null,
+                                          Webservice.cntCode,
+                                          phoneNumber,
+                                          name,
+                                          email)
+                                      .then((value) {
+                                    if (value == true) {
+                                      txnProvider.clearList();
+                                      showSuccessSnack(
+                                          context, 'Registered Successfully');
+                                      Navigator.of(context)
+                                          .pushReplacementNamed(Approutes.main);
+                                    } else {
+                                      Utils.showErrorDialog(
+                                          context, value.toString());
+                                    }
+                                  });
+                                } else {
+                                  await userProvider
+                                      .login(context, result.user!, phoneNumber)
+                                      .then((value) {
+                                    if (value == true) {
+                                      txnProvider.clearList();
+                                      showSuccessSnack(
+                                          context, 'Login Successfully');
+                                      Navigator.of(context)
+                                          .pushReplacementNamed(Approutes.main);
+                                    } else {
+                                      Utils.showErrorDialog(
+                                          context, value.toString());
+                                    }
+                                  });
+                                }
                               } else {
-                                userProvider
-                                    .login(context, phoneNumber)
-                                    .then((value) {
-                                  if (value == true) {
-                                    txnProvider.clearList();
-                                    showSuccessSnack(
-                                        context, 'Login Successflly');
-                                    Navigator.of(context)
-                                        .pushReplacementNamed(Approutes.main);
-                                  } else {
-                                    Utils.showErrorDialog(
-                                        context, value.toString());
-                                  }
-                                });
+                                ShowErrorDialog("Something went wrong");
                               }
-                              //ShowErrorDialog(value.toString());
-                            })
-                            .whenComplete(() {})
-                            .catchError((error) {
-                              ShowErrorDialog(error.toString());
-                            })
-                            .onError((error, stackTrace) {
-                              Utils.buildSnackbar(context, error.toString());
-                            })
-                            .then((value) async {
-                              if (value.toString().isEmpty || value == null) {
-                                // await Preference.setUserDetails(name, email, phoneNumber)
-                                //     .then((_) async {
-                                //   await preferences.setInt('isLogin', 1).then((_) {
-                                //     Navigator.of(context)
-                                //         .pushReplacementNamed(HomeWidget.routeName);
-                                //   });
-                                // });
-                              } else {
-                                ShowErrorDialog(value.toString());
-                              }
-                            });
-                      }
-                    }
-                  }
-                }, 'Verify Code'),
+
+                              setState(() => isLoading = false);
+                            }
+                          }
+                        }
+                      }, 'Verify Code'),
               ),
               const SizedBox(
                 height: 20,

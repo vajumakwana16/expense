@@ -125,11 +125,7 @@ class Utils {
           if (title == 'Expense' || title.contains('Fixed'))
             Center(
                 child: Text(
-              'Balance : ' +
-                  Webservice.formateNumber(Webservice.balance.isEmpty
-                      ? 0
-                      : double.parse(Webservice.balance)) +
-                  "  ",
+              "Balance :  ${Webservice.formateNumber(Webservice.balance)}",
               style: const TextStyle(color: Colors.white),
             ))
         ],
@@ -296,14 +292,15 @@ class Utils {
       String hint, String lbl, onChange, String validateMsg) {
     final isDarkkmode = Theme.of(context).brightness == Brightness.dark;
     return TextFormField(
-      keyboardType: hint == 'Enter Balance'
+      keyboardType: hint == 'Enter Budget'
           ? TextInputType.number
           : TextInputType.emailAddress,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       enableSuggestions: true,
-      textInputAction: TextInputAction.next,
+      textInputAction: TextInputAction.done,
       enabled: isEnabled ? true : false,
       initialValue: initValue,
+      // textAlign: TextAlign.center,
       decoration: InputDecoration(
           hintText: hint,
           labelText: lbl,
@@ -447,13 +444,13 @@ class Utils {
         onTap: isEdit ? opFunct : () {},
         child: Container(
           decoration: BoxDecoration(
-              color: Theme.of(context).secondaryHeaderColor,
+              color: Theme.of(context).primaryColor,
               borderRadius: BorderRadius.circular(10)),
           child: Container(
               padding:
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
               decoration: Utils.buildBoxDecoration(
-                  context, 10, Theme.of(context).secondaryHeaderColor),
+                  context, 10, Theme.of(context).primaryColor),
               child: InkWell(
                 splashColor: Colors.white,
                 // color: Colors.cyan.shade600,
@@ -471,14 +468,23 @@ class Utils {
 
   static buildLoginButton(
       BuildContext context, VoidCallback opFunct, String text) {
-    return Material(
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.sizeOf(context).width * 0.2)),
+        onPressed: opFunct,
+        child: Text(text));
+    /* return Material(
       color: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(25),
       child: InkWell(
         splashColor: Colors.white,
         onTap: opFunct, //startLogin,
-        child: AnimatedContainer(
-          duration: const Duration(seconds: 1),
+        child: Container(
+          color: Theme.of(context).primaryColor,
+          // duration: const Duration(seconds: 1),
           width: 150,
           height: 50,
           alignment: Alignment.center,
@@ -489,7 +495,7 @@ class Utils {
               )),
         ),
       ),
-    );
+    );*/
   }
 
   //pakage list_tile_switch: ^1.0.0
@@ -567,6 +573,8 @@ class Utils {
                         ]),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         if (description != '')
                           SizedBox(
@@ -591,16 +599,16 @@ class Utils {
                         SizedBox(
                           height: height * 0.01,
                         ),
-                        buildEditText(context, true, '1000', 'Enter Balance',
-                            'Add Balance', (value) {
+                        buildEditText(context, true, Webservice.user.balance,
+                            'Enter Budget', 'Edit Budget', (value) {
                           Webservice.newBalance = value;
-                        }, 'Enter valid balance'),
+                        }, 'Enter valid Budget'),
                         SizedBox(
                           height: height * 0.01,
                         ),
                         Align(
                           alignment: Alignment.bottomCenter,
-                          child: buildButton(context, onAddBalance, text, true),
+                          child: buildLoginButton(context, onAddBalance, text),
                         ),
                       ],
                     ),

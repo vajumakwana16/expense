@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fAuth;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/local_auth.dart';
@@ -6,18 +8,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 
 class Webservice {
-  static const String baseurl =
-      "https://barbellate-caution.000webhostapp.com/expense/api/"; //laptop
+  // static const String baseurl =
+  // "https://barbellate-caution.000webhostapp.com/expense/api/"; //laptop
   // static const String baseurl = "http://192.168.43.237/expense/api/"; //vaju
-  // static const String baseurl = "http://vajumakwana.epizy.com/expense/api/";
+  static const String baseurl = "http://vajumakwana.epizy.com/expense/api/";
+
+  //firebase
+  static fAuth.FirebaseAuth appUser = fAuth.FirebaseAuth.instance;
+  static final FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
   static const String apptoken = "123456";
-  static const String appversion = "1.0";
+  static const String appversion = "1.0.8";
   static const String devicetype = "a";
   static const String apikey = "AIzaSyCKP4esBA80tJTkGIEYXdqwzimvpBAFf70";
 
   static bool developerMode = true;
-  static String balance = '';
+  static bool isExecute = false;
+  static double balance = 0.0;
   static String uid = "";
   static String name = "";
   static String email = "";
@@ -31,6 +38,8 @@ class Webservice {
   // static var placeholder =Webservice.baseurl + 'assets/uploads/profile_images/placeholder.jpg';
   static var placeholder =
       'https://media.istockphoto.com/vectors/default-avatar-photo-placeholder-icon-grey-profile-picture-business-vector-id1327592506?k=20&m=1327592506&s=612x612&w=0&h=hgMOPfz7H-CYP_CQ0wbv3IwRkbQna32xWUPoXtMyg5M=';
+
+  static User user = User();
 
   static printMag(String msg) {
     print(msg);
@@ -58,7 +67,7 @@ class Webservice {
         "$baseurl?action=DeleteTransaction&tid=$id&total_balance=$totalBalance&uid=${Webservice.uid}&login_token=${Webservice.logintoken}&from=$from&app_token=$apptoken&app_version=$appversion&device_type=$devicetype");
   }
 
-  static String? newBalance;
+  static String? newBalance = '1000';
   static Uri buildAddBalance(String bal) {
     return Uri.parse(
         "$baseurl?action=AddBalance&balance=$bal&uid=${Webservice.uid}&login_token=${Webservice.logintoken}&app_token=$apptoken&app_version=$appversion&device_type=$devicetype");
@@ -98,6 +107,7 @@ class Webservice {
     if (json == null) {
       throw 'User not found';
     }
+    Webservice.user = User.fromJson(jsonDecode(json));
     return User.fromJson(jsonDecode(json));
   }
 
@@ -117,7 +127,8 @@ class Webservice {
       udid = getUser().udid;
       logintoken = getUser().logintoken;
       profileimage = getUser().profileimage;
-      balance = getUser().balance.toString();
+      balance =
+          user.balance.isEmpty ? 0.0 : double.parse(user.balance.toString());
     }
   }
 

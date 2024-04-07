@@ -107,8 +107,8 @@ class _SettingsState extends State<Settings> {
 
     //show balance dialog
     showAddBalance() {
-      Utils.buildBalanceDialog(
-          context, onAddBalance, width, height, '', 'Add Balance', '', 'Add');
+      Utils.buildBalanceDialog(context, onAddBalance, width, height, '',
+          'Enter Budget', '', 'Update');
     }
 
     final LocalAuthentication auth = LocalAuthentication();
@@ -137,8 +137,15 @@ class _SettingsState extends State<Settings> {
                         horizontal: 20, vertical: 10),
                     decoration: Utils.buildBoxDecoration(
                         context, 10, Webservice.bgColor!),
-                    child: Utils.buildListTile(context, Icons.monetization_on,
-                        'Add Balance', showAddBalance)),
+                    child: ListTile(
+                      leading: Icon(Icons.monetization_on),
+                      title: Text('Edit Budget'),
+                      trailing: IconButton(
+                          onPressed: () => showAddBalance(),
+                          icon: Icon(Icons.edit)),
+                    )),
+                // child: Utils.buildListTile(context, Icons.monetization_on,
+                //     'Add Budget', showAddBalance)),
 
                 //use fingerprint
                 Container(
@@ -215,13 +222,13 @@ class _SettingsState extends State<Settings> {
                 ),
 
                 //about
-                Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    decoration: Utils.buildBoxDecoration(
-                        context, 10, Webservice.bgColor!),
-                    child: Utils.buildListTile(
-                        context, Icons.info, 'About', about)),
+                // Container(
+                //     margin: const EdgeInsets.symmetric(
+                //         horizontal: 20, vertical: 10),
+                //     decoration: Utils.buildBoxDecoration(
+                //         context, 10, Webservice.bgColor!),
+                //     child: Utils.buildListTile(
+                //         context, Icons.info, 'About', about)),
 
                 //logout
                 Container(

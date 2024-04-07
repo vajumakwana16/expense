@@ -50,14 +50,18 @@ class _TransactionListState extends State<TransactionList>
         fromHome ? txnProvider.usertransaction : txnProvider.fixedTransactions;
     return txnList.isEmpty
         ? LayoutBuilder(builder: (ctx, constraints) {
-            return Column(
+            return ListView(
+              shrinkWrap: true,
               children: <Widget>[
                 const SizedBox(height: 30),
-                Text(
-                  fromHome
-                      ? "No transaction added yet!"
-                      : "No Fixed transaction added yet!",
-                  style: Theme.of(context).appBarTheme.titleTextStyle,
+                Center(
+                  child: Text(
+                    fromHome
+                        ? "No transaction added yet!"
+                        : "No Fixed transaction added yet!",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).appBarTheme.titleTextStyle,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 SizedBox(

@@ -43,9 +43,10 @@ class TxnProvider with ChangeNotifier {
     if (Webservice.newBalance == '') {
       return;
     }
-    String addingBal = (double.parse(Webservice.newBalance!) +
-            double.parse(Webservice.balance))
-        .toString();
+    print("Webservice.newBalance!");
+    print(Webservice.newBalance!);
+    String addingBal = double.parse(Webservice.newBalance!).toString();
+    // (double.parse(Webservice.newBalance!) + Webservice.balance).toString();
     final url = Webservice.buildAddBalance(addingBal);
     print(url);
     final response = await http.post(url);
@@ -85,22 +86,16 @@ class TxnProvider with ChangeNotifier {
     try {
       var checkExpense = isExpense == true ? 'expense' : 'income';
       final totalBalance = isExpense
-          ? (int.parse(Webservice.balance) - tamount)
-          : (int.parse(Webservice.balance) + tamount);
-      if (isExpense && int.parse(Webservice.balance) < tamount) {
+          ? (Webservice.balance - tamount)
+          : (Webservice.balance + tamount);
+
+      if (isExpense && double.parse(Webservice.user.balance) < tamount) {
         await Utils.buildshowTopSnackBar(
             context, Icons.monetization_on, 'No Sufficient Balance!', 'error');
         return;
       }
       final url = Uri.parse(
-          "${Webservice.baseurl}?action=AddTransaction&txn_title=$ttitle" +
-              "&from=$from" +
-              "&txn_amount=$tamount" +
-              "&txn_note=$txn_note" +
-              "&txn_date=$choosenDate" +
-              "&txn_type=$checkExpense" +
-              "&total_balance=$totalBalance" +
-              "&uid=${Webservice.uid}&login_token=${Webservice.logintoken}&app_token=${Webservice.apptoken}&app_version=${Webservice.appversion}&device_type=${Webservice.devicetype}");
+          "${Webservice.baseurl}?action=AddTransaction&txn_title=$ttitle&from=$from&txn_amount=$tamount&txn_note=$txn_note&txn_date=$choosenDate&txn_type=$checkExpense&total_balance=$totalBalance&uid=${Webservice.uid}&login_token=${Webservice.logintoken}&app_token=${Webservice.apptoken}&app_version=${Webservice.appversion}&device_type=${Webservice.devicetype}");
       final response = await http.post(url);
       print(response.body);
       if (response.statusCode == 200) {
@@ -157,6 +152,8 @@ class TxnProvider with ChangeNotifier {
     final url = Webservice.buildUrl('GetTransactionList');
     final response = await http.post(url);
 
+    print(response.body);
+
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       final status = responseData['status'];
@@ -166,6 +163,7 @@ class TxnProvider with ChangeNotifier {
         final balance = responseData['data']['balance']['total_balance'];
         final user = Webservice.getUser();
         final newUser = user.copy(balance: balance);
+        print(newUser.toJson());
         await Webservice.pref!.remove('user');
         Webservice.setUser(newUser);
         Webservice.initUser();
@@ -225,8 +223,8 @@ class TxnProvider with ChangeNotifier {
     try {
       // print(transaction.type);
       final totalBalance = transaction.type == 'expense'
-          ? (int.parse(Webservice.balance) + transaction.amount)
-          : (int.parse(Webservice.balance) - transaction.amount);
+          ? (Webservice.balance + transaction.amount)
+          : (Webservice.balance - transaction.amount);
       Uri url;
       if (from == "home") {
         url = Webservice.buildDeleteTransactionUrl(

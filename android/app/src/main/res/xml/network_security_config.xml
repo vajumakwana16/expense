@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config>
-        <domain>barbellate-caution.000webhostapp.com</domain>
+<!--        <domain>barbellate-caution.000webhostapp.com</domain>-->
 <!--        <trust-anchors>-->
 <!--            <certificates src="@raw/my_ca"/>-->
 <!--        </trust-anchors>-->

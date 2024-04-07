@@ -1,0 +1,22 @@
+keytool -genkey -v -keystore ~/expense.jks -keyalg RSA \-keysize 2048 -validity 10000 -alias key0
+keytool -genkey -v -keystore ./keystore.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias keystore
+
+
+vaju
+IN
+
+created key.properties file
+
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+ signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }

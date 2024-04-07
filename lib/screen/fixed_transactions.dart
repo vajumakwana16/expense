@@ -41,7 +41,7 @@ class _FixedState extends State<Fixed> {
 
     if (isInit) {
       txnProvider.getFixedTransactions(context).then((value) {
-        if (value == true) {
+        if (value != null) {
           setState(() {
             isInit = false;
           });

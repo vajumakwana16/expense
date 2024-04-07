@@ -1,3 +1,4 @@
+import 'package:expense/firebase_options.dart';
 import 'package:expense/models/transaction.dart';
 import 'package:expense/providers/txn_provider.dart';
 import 'package:expense/screen/auth.dart';
@@ -32,12 +33,12 @@ void main() async {
   await Webservice.init();
   await Webservice.prefgetBool('usefingerprint')
       .then((value) => {authEnabled = value});
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.playIntegrity,
-    appleProvider: AppleProvider.appAttest,
-  );
+  // await FirebaseAppCheck.instance.activate(
+  //   androidProvider: AndroidProvider.debug, //playIntegrity
+  //   appleProvider: AppleProvider.appAttest,
+  // );
 
   is_first = await Webservice.prefgetBool('is_first') == null ? false : true;
   print("object");
@@ -293,7 +294,7 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
 
     void _startNewAddTransaction(BuildContext ctx) {
       try {
-        if (Webservice.balance == '0') {
+        if (Webservice.balance == 0.0) {
           Utils.buildBalanceDialog(context, onAddBalance, width, height, '', '',
               'First you have to add Balance', 'Add');
         } else {
@@ -346,7 +347,7 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
       key: NavigationService.navigatorKey,
       body: NotificationListener<ScrollNotification>(
           onNotification: onScrollNotification,
-          child: screens[_bottomNavIndex]),
+          child: IndexedStack(index: _bottomNavIndex, children: screens)),
       floatingActionButton: showFab ? floatingActionbutton : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar.builder(

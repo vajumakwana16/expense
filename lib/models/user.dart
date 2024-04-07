@@ -65,7 +65,7 @@ class User {
       profileimage: json['profile_image'].toString(),
       isNotify: json['is_notify'].toString(),
       isFirst: json['is_first'].toString(),
-      balance: json['total_balance']);
+      balance: json['total_balance'].toString());
 
   Map<String, dynamic> toJson() => {
         'id': id.toString(),

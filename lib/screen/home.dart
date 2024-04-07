@@ -60,7 +60,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
     if (isInit) {
       txnProvider.getTransactions(context).then((value) {
-        if (value == true) {
+        if (value != null) {
           setState(() {
             isInit = false;
           });
