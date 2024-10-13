@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as cf;
 import 'package:expense/utils/firebase_utils.dart';
+import 'package:expense/utils/inbox_transactions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import '../models/user.dart';
 import '../utils/app_routes.dart';
 import '../utils/contextServise.dart';
@@ -185,6 +187,20 @@ class TxnProvider with ChangeNotifier {
 
   //GetTransactionList
   Future getTransactions(BuildContext context) async {
+    var status = await Permission.sms.request();
+
+    if (status.isGranted) {
+      //displayMSG(context,"SMS permission granted");
+    } else {
+      // Permission denied
+      Utils.permissionDialog(context, "SMS permission denied", () async {
+        await Permission.sms.request();
+        if (status.isGranted) {
+          Navigator.pop(context);
+        }
+      });
+    }
+
     cf.QuerySnapshot<Map<String, dynamic>> txns = await FirebaseUtils
         .transactionsCollection
         .where('uid', isEqualTo: Webservice.user.id)
@@ -200,6 +216,24 @@ class TxnProvider with ChangeNotifier {
           .map((e) => usertransaction.add(Transaction.fromJson(e.data())))
           .toList();
     }
+
+    final List<Transaction> ex = await InboxTransactions.getInboxExpenses();
+    usertransaction.addAll(ex);
+
+    final List<Transaction> incomeList =
+        await InboxTransactions.getInboxIncomes();
+
+    print(ex.toList());
+    print("===");
+    print(incomeList.toList());
+
+    usertransaction.addAll(incomeList);
+
+    usertransaction.sort((a, b) => b.date!.compareTo(a.date!));
+
+    Webservice.balance = await InboxTransactions.fetchTotalBal(
+        usertransaction[0].inboxMsg.toString());
+
     notifyListeners();
   }
 

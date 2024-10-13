@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../screen/auth.dart';
+import '../screen/auth/auth.dart';
 import '../utils/utils.dart';
 
 class AuthCard extends StatefulWidget {

@@ -1,11 +1,11 @@
-import '../providers/theme_previder.dart';
-import '../providers/user_provider.dart';
+import '../../providers/theme_previder.dart';
+import '../../providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/utils.dart';
-import '../utils/webservice.dart';
+import '../../utils/utils.dart';
+import '../../utils/webservice.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -171,29 +171,37 @@ class _AuthCardState extends State<AuthCard>
             if (isSigUp()) {
               Utils.buildshowTopSnackBar(context, Icons.no_accounts,
                   'Account Already Exist\nPlease Sign in', 'error');
+              setState(() => _isLoading = false);
             } else {
               // Utils.buildshowTopSnackBar(
               //     context, Icons.account_circle, 'Loging you', 'success');
-              userProvider.verifyPhoneWithFirebase(
-                  context, Webservice.cntCode, "", "", controllerPhone.text, 1);
+              userProvider
+                  .verifyPhoneWithFirebase(context, Webservice.cntCode, "", "",
+                      controllerPhone.text, 1)
+                  .then((v) {
+                setState(() => _isLoading = false);
+              });
             }
-            setState(() => _isLoading = false);
           } else {
             if (isSigUp()) {
               Utils.buildshowTopSnackBar(
                   context, Icons.account_circle, 'Creating Account', 'success');
-              userProvider.verifyPhoneWithFirebase(
-                  context,
-                  Webservice.cntCode,
-                  controllerName.text,
-                  controllerEmail.text,
-                  controllerPhone.text,
-                  0);
+              userProvider
+                  .verifyPhoneWithFirebase(
+                      context,
+                      Webservice.cntCode,
+                      controllerName.text,
+                      controllerEmail.text,
+                      controllerPhone.text,
+                      0)
+                  .then((v) {
+                setState(() => _isLoading = false);
+              });
             } else {
               Utils.buildshowTopSnackBar(
                   context, Icons.no_accounts, 'Account Not Exist', 'error');
+              setState(() => _isLoading = false);
             }
-            setState(() => _isLoading = false);
           }
         });
       }

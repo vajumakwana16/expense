@@ -124,9 +124,12 @@ class Utils {
         actions: [
           if (title == 'Expense' || title.contains('Fixed'))
             Center(
-                child: Text(
-              "Balance :  ${Webservice.formateNumber(Webservice.balance)}",
-              style: const TextStyle(color: Colors.white),
+                child: Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: Text(
+                "Balance :  ${Webservice.formateNumber(Webservice.balance)}",
+                style: const TextStyle(color: Colors.white),
+              ),
             ))
         ],
       );
@@ -224,7 +227,7 @@ class Utils {
         barrierDismissible: false,
         builder: (ctx) => AlertDialog(
               title: const Text(
-                'Error Occured!',
+                'Error Occurred!',
                 style: TextStyle(color: Colors.red),
               ),
               content: Text(message),
@@ -234,6 +237,24 @@ class Utils {
                       Navigator.of(context).pop();
                     },
                     child: const Text('Okay'))
+              ],
+            ));
+  }
+
+  static void permissionDialog(
+      BuildContext context, String message, Function() onClick) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => AlertDialog(
+              title: const Text(
+                'Permission Required!',
+                style: TextStyle(color: Colors.red),
+              ),
+              content: Text(message),
+              actions: [
+                TextButton(
+                    onPressed: onClick, child: const Text('Grant Permission'))
               ],
             ));
   }
@@ -566,10 +587,10 @@ class Utils {
                             : Colors.white,
                         borderRadius: BorderRadius.circular(padding),
                         boxShadow: const [
-                          BoxShadow(
-                              color: Colors.black,
-                              offset: Offset(0, 3),
-                              blurRadius: 20),
+                          // BoxShadow(
+                          //     color: Colors.black,
+                          //     offset: Offset(0, 3),
+                          //     blurRadius: 20),
                         ]),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,

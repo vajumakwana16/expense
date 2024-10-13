@@ -108,8 +108,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         strokeWidth: 3,
         edgeOffset: 20,
         displacement: 0,
-        triggerMode: RefreshIndicatorTriggerMode.onEdge,
-        onRefresh: () => txnProvider.getTransactions(context),
+        // triggerMode: RefreshIndicatorTriggerMode.onEdge,
+        onRefresh: () async => await txnProvider.getTransactions(context),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(

@@ -23,6 +23,7 @@ class Transaction {
   String? title;
   double? amount;
   DateTime? date;
+  String? inboxMsg;
   int? type; //1=expense, 2=income, 3=transfer
   String? note;
 
@@ -32,6 +33,7 @@ class Transaction {
       this.title,
       this.amount,
       this.date,
+      this.inboxMsg,
       this.type,
       this.note});
 
@@ -44,6 +46,7 @@ class Transaction {
     // date = DateTime.parse(json['date'].toString());
     type = int.parse(json['type'].toString());
     note = json['note'].toString();
+    inboxMsg = json['inboxMsg'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -55,6 +58,7 @@ class Transaction {
     data['date'] = this.date;
     data['type'] = this.type;
     data['note'] = this.note;
+    data['inboxMsg'] = this.inboxMsg;
     return data;
   }
 
