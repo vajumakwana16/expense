@@ -50,35 +50,46 @@ class _TransactionListState extends State<TransactionList>
         fromHome ? txnProvider.usertransaction : txnProvider.fixedTransactions;
     return txnList.isEmpty
         ? LayoutBuilder(builder: (ctx, constraints) {
-            return ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                const SizedBox(height: 30),
-                Center(
-                  child: Text(
-                    fromHome
-                        ? "No transaction added yet!"
-                        : "No Fixed transaction added yet!",
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).appBarTheme.titleTextStyle,
+            return RefreshIndicator(
+              strokeWidth: 3,
+              edgeOffset: 20,
+              displacement: 0,
+              triggerMode: RefreshIndicatorTriggerMode.onEdge,
+              onRefresh: () {
+                return fromHome
+                    ? txnProvider.getTransactions(context)
+                    : txnProvider.getFixedTransactions(context);
+              },
+              child: ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  const SizedBox(height: 30),
+                  Center(
+                    child: Text(
+                      fromHome
+                          ? "No transaction added yet!"
+                          : "No Fixed transaction added yet!",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).appBarTheme.titleTextStyle,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  height: constraints.maxHeight * 0.6,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Lottie.asset('assets/raw/no_transaction.json',
-                        controller: _controller, onLoaded: (composition) {
-                      _controller
-                        ..duration = composition.duration
-                        ..forward();
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: constraints.maxHeight * 0.6,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Lottie.asset('assets/raw/no_transaction.json',
+                          controller: _controller, onLoaded: (composition) {
+                        _controller
+                          ..duration = composition.duration
+                          ..forward();
 
-                      _controller.repeat();
-                    }),
+                        _controller.repeat();
+                      }),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           })
         : isLoading
@@ -112,11 +123,11 @@ class _TransactionListState extends State<TransactionList>
                             motion: const DrawerMotion(),
                             dismissible: DismissiblePane(
                               onDismissed: () async {
-                                await txnProvider.deleteTransaction(
-                                    context,
-                                    txnList[index].type,
-                                    txnList[index],
-                                    fromHome ? "home" : "fixed");
+                                // await txnProvider.deleteTransaction(
+                                //     context,
+                                //     txnList[index].type,
+                                //     txnList[index],
+                                //     fromHome ? "home" : "fixed");
                               },
                             ),
                             children: [
@@ -126,7 +137,7 @@ class _TransactionListState extends State<TransactionList>
                                 onPressed: (ctx) async {
                                   await txnProvider.deleteTransaction(
                                       context,
-                                      txnList[index].type,
+                                      txnList[index].type!,
                                       txnList[index],
                                       widget.from);
                                 },
@@ -174,22 +185,22 @@ class _TransactionListState extends State<TransactionList>
                                         style: TextStyle(
                                           fontFamily: 'Quicksand',
                                           fontSize: 18,
-                                          color:
-                                              txnList[index].type == 'expense'
-                                                  ? Colors.red
-                                                  : Colors.green,
+                                          color: txnList[index].type == 1
+                                              ? Colors.red
+                                              : Colors.green,
                                         ))),
                               )),
                               title: Text(
-                                txnList[index].title,
+                                txnList[index].title!,
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
                               subtitle: Text(
-                                DateFormat.yMMMEd().format(txnList[index].date),
+                                DateFormat.yMMMEd()
+                                    .format(txnList[index].date!),
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
                               trailing: fromHome
-                                  ? txnList[index].type == 'expense'
+                                  ? txnList[index].type == 1
                                       ? const Icon(
                                           Icons.arrow_upward,
                                           color: Colors.red,

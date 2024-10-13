@@ -85,14 +85,8 @@ class MyApp extends StatelessWidget {
                     Approutes.verification: (context) => const Varification(),
                     Approutes.profile: (context) => const Profile(),
                     Approutes.settings: (context) => const Settings(),
-                    Approutes.detail: (context) => DetailPage(
-                        txn: Transaction(
-                            id: "0",
-                            title: "title",
-                            amount: 1.0,
-                            date: DateTime.now(),
-                            type: "Expense",
-                            note: "note")),
+                    Approutes.detail: (context) =>
+                        DetailPage(txn: Transaction()),
                   },
                 )));
   }
@@ -296,7 +290,7 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
       try {
         if (Webservice.balance == 0.0) {
           Utils.buildBalanceDialog(context, onAddBalance, width, height, '', '',
-              'First you have to add Balance', 'Add');
+              'First you have to add Budget', 'Add');
         } else {
           final from = _bottomNavIndex == 0 ? "home" : "fixed";
           showModalBottomSheet(
@@ -306,6 +300,7 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
             context: ctx,
             builder: (context) {
               return FractionallySizedBox(
+                  heightFactor: 0.9,
                   child: GestureDetector(
                       onTap: (() {}),
                       child: NewTransaction(

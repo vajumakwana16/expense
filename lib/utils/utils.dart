@@ -257,7 +257,7 @@ class Utils {
       BuildContext context, IconData icon, String msg, String type) {
     if (type == 'success') {
       showTopSnackBar(
-        context,
+        Overlay.of(context),
         CustomSnackBar.success(
           icon: Icon(icon, color: Colors.white, size: 30),
           iconRotationAngle: 0,
@@ -267,7 +267,7 @@ class Utils {
       );
     } else if (type == 'error') {
       showTopSnackBar(
-        context,
+        Overlay.of(context),
         CustomSnackBar.error(
           icon: Icon(icon, color: Colors.white, size: 30),
           iconRotationAngle: 0,
@@ -277,7 +277,7 @@ class Utils {
       );
     } else {
       showTopSnackBar(
-        context,
+        Overlay.of(context),
         CustomSnackBar.info(
           icon: Icon(icon, color: Colors.white, size: 30),
           iconRotationAngle: 0,

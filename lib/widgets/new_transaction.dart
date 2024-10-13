@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import '../utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -176,13 +178,13 @@ class _NewTransactionState extends State<NewTransaction> {
                     Expanded(
                       child: Text(
                         _selectedDate == ""
-                            ? 'No Date Choosen!'
+                            ? 'No date selected!'
                             : 'Picked Date : ${DateFormat.yMd().format(DateTime.parse(_selectedDate))}',
                       ),
                     ),
                     TextButton(
                       onPressed: _presentDatePicker,
-                      child: Text('Choose Date',
+                      child: Text('Select Date',
                           style: TextStyle(
                             color: color,
                             fontWeight: FontWeight.bold,
@@ -191,6 +193,8 @@ class _NewTransactionState extends State<NewTransaction> {
                   ],
                 ),
               ),
+              SizedBox(height: height * 0.01),
+              buildChipList(),
               SizedBox(height: height * 0.01),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -215,7 +219,9 @@ class _NewTransactionState extends State<NewTransaction> {
 
   buildChipList() {
     return Wrap(
-      spacing: 4.0,
+      // crossAxisAlignment: WrapCrossAlignment.center,
+      // alignment: WrapAlignment.center,
+      spacing: 5.0,
       children: <Widget>[
         _buildChip(isGrocery, Icons.local_grocery_store, 'Grocery', color,
             (value) {
@@ -236,15 +242,6 @@ class _NewTransactionState extends State<NewTransaction> {
             isOthers = false;
           });
         }),
-        _buildChip(isInvestment, Icons.ac_unit, 'Investment', color, (value) {
-          setState(() {
-            isGrocery = false;
-            isPersonal = false;
-            isInvestment = value;
-            isTransportation = false;
-            isOthers = false;
-          });
-        }),
         _buildChip(isTransportation, Icons.emoji_transportation,
             'Transportation', color, (value) {
           setState(() {
@@ -252,6 +249,15 @@ class _NewTransactionState extends State<NewTransaction> {
             isPersonal = false;
             isInvestment = false;
             isTransportation = value;
+            isOthers = false;
+          });
+        }),
+        _buildChip(isInvestment, Icons.ac_unit, 'Investment', color, (value) {
+          setState(() {
+            isGrocery = false;
+            isPersonal = false;
+            isInvestment = value;
+            isTransportation = false;
             isOthers = false;
           });
         }),
@@ -272,17 +278,22 @@ class _NewTransactionState extends State<NewTransaction> {
       isSelected, IconData icon, String label, Color color, onChange) {
     return ChoiceChip(
       avatar: CircleAvatar(
-          radius: 10,
+          radius: 12,
           backgroundColor: Colors.white70,
-          child: Icon(icon, size: 15)),
+          child: Icon(icon, size: 16)),
       selected: isSelected,
       label: Text(
         label,
-        style: const TextStyle(color: Colors.white, fontSize: 8),
+        style: Theme.of(context)
+            .textTheme
+            .bodySmall!
+            .copyWith(color: Colors.white),
       ),
       selectedColor: color,
-      labelPadding: const EdgeInsets.only(right: 8),
-      padding: EdgeInsets.zero,
+      backgroundColor: Theme.of(context).primaryColorDark,
+      labelPadding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.sizeOf(context).width * 0.05),
+      // padding: EdgeInsets.all(MediaQuery.sizeOf(context).width * 0.02),
       // disabledColor: unselected,
       elevation: 6.0,
       onSelected: onChange,

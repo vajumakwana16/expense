@@ -31,7 +31,7 @@ class UserProvider with ChangeNotifier {
     try {
       bool isExist = false;
       QuerySnapshot<Map<String, dynamic>> users =
-          await Webservice.fireStore.collection("users").get();
+          await FirebaseUtils.fireStore.collection("users").get();
       users.docs.map((doc) {
         if (doc.data().containsValue(userPhone)) {
           isExist = true;
@@ -283,14 +283,15 @@ class UserProvider with ChangeNotifier {
       final udid = await FirebaseMessaging.instance.getToken();
 
       QuerySnapshot<Map<String, dynamic>> users =
-          await Webservice.fireStore.collection("users").get();
+          await FirebaseUtils.fireStore.collection("users").get();
       String uid = "";
-      await users.docs.map((doc) {
+      users.docs.map((doc) {
         if (doc.data().containsValue(phone)) {
           uid = doc.data()['id'];
         }
       }).toList();
-
+      print("userData.uid ${userData!.uid}");
+      print("uid ${uid}");
       final fUser = userData != null
           ? FirebaseUtils.usersCollection.doc(userData.uid)
           : FirebaseUtils.usersCollection.doc(uid);
@@ -344,56 +345,61 @@ class UserProvider with ChangeNotifier {
   Future updateProfileImage(context, File file) async {
     // print(file.path);
     try {
-      final url = Uri.parse(
-          "${Webservice.baseurl}?action=UpdateProfileImage&uid=${Webservice.uid}&login_token=${Webservice.logintoken}&app_token=${Webservice.apptoken}&app_version=${Webservice.appversion}&device_type=${Webservice.devicetype}");
+      if (!Webservice.isExecute) {
+        await FirebaseUtils.uploadImage(file: file);
+      } else {
+        final url = Uri.parse(
+            "${Webservice.baseurl}?action=UpdateProfileImage&uid=${Webservice.uid}&login_token=${Webservice.logintoken}&app_token=${Webservice.apptoken}&app_version=${Webservice.appversion}&device_type=${Webservice.devicetype}");
 
-      var request = http.MultipartRequest("POST", url);
-      var stream = http.ByteStream(file.openRead());
-      var length = await file.length();
-      // print(stream.toString() + length.toString());
-      var multipartFile = http.MultipartFile('profile_image', stream, length,
-          filename: 'abc.jpeg');
+        var request = http.MultipartRequest("POST", url);
+        var stream = http.ByteStream(file.openRead());
+        var length = await file.length();
+        // print(stream.toString() + length.toString());
+        var multipartFile = http.MultipartFile('profile_image', stream, length,
+            filename: 'abc.jpeg');
 
-      // add file to multipart
-      request.files.add(multipartFile);
+        // add file to multipart
+        request.files.add(multipartFile);
 
-      final response = await request.send();
-      // if (response.statusCode == 200) {
-      var getingresponse = await response.stream.toBytes();
-      final responseData = json.decode(String.fromCharCodes(getingresponse));
-      print("responseData.toString()");
-      print(responseData.toString());
-      final status = responseData['status'];
-      final msg = responseData['msg'];
-      if (status == 0) {
-        Utils.buildshowTopSnackBar(context, Icons.info, msg, 'error');
-      } else if (status == 1) {
-        final profileimage =
-            responseData['data']['profile']['profile_image'] == ''
-                ? responseData['profile_img_url'].toString() + "placeholder.jpg"
-                : responseData['profile_img_url'].toString() +
-                    responseData['data']['profile']['profile_image'].toString();
-        final oldUser = Webservice.getUser();
-        final user = oldUser.copy(
-            id: responseData['data']['profile']['uid'].toString(),
-            name: responseData['data']['profile']['name'].toString(),
-            email: responseData['data']['profile']['email'].toString(),
-            phone: responseData['data']['profile']['phone'].toString(),
-            cntCode: responseData['data']['profile']['cnt_code'].toString(),
-            logintoken:
-                responseData['data']['profile']['login_token'].toString(),
-            // isNotify: responseData['data']['profile']['is_notify'].toString(),
-            profileimage: profileimage);
-        await Webservice.setUser(user);
-        await Webservice.initUser();
-        Utils.buildshowTopSnackBar(context, Icons.done, msg, 'success');
-      } else if (status == 2) {
-        Utils.buildshowTopSnackBar(context, Icons.info, msg, 'error');
-        // sessionExpired(context);
-      }
-      if (status == 3) {
-        Utils.buildSnackbar(context!, msg);
-        return msg;
+        final response = await request.send();
+        // if (response.statusCode == 200) {
+        var getingresponse = await response.stream.toBytes();
+        final responseData = json.decode(String.fromCharCodes(getingresponse));
+        print("responseData.toString()");
+        print(responseData.toString());
+        final status = responseData['status'];
+        final msg = responseData['msg'];
+        if (status == 0) {
+          Utils.buildshowTopSnackBar(context, Icons.info, msg, 'error');
+        } else if (status == 1) {
+          final profileimage = responseData['data']['profile']
+                      ['profile_image'] ==
+                  ''
+              ? responseData['profile_img_url'].toString() + "placeholder.jpg"
+              : responseData['profile_img_url'].toString() +
+                  responseData['data']['profile']['profile_image'].toString();
+          final oldUser = Webservice.getUser();
+          final user = oldUser.copy(
+              id: responseData['data']['profile']['uid'].toString(),
+              name: responseData['data']['profile']['name'].toString(),
+              email: responseData['data']['profile']['email'].toString(),
+              phone: responseData['data']['profile']['phone'].toString(),
+              cntCode: responseData['data']['profile']['cnt_code'].toString(),
+              logintoken:
+                  responseData['data']['profile']['login_token'].toString(),
+              // isNotify: responseData['data']['profile']['is_notify'].toString(),
+              profileimage: profileimage);
+          await Webservice.setUser(user);
+          await Webservice.initUser();
+          Utils.buildshowTopSnackBar(context, Icons.done, msg, 'success');
+        } else if (status == 2) {
+          Utils.buildshowTopSnackBar(context, Icons.info, msg, 'error');
+          // sessionExpired(context);
+        }
+        if (status == 3) {
+          Utils.buildSnackbar(context!, msg);
+          return msg;
+        }
       }
     } catch (e) {
       Utils.buildshowTopSnackBar(context, Icons.info, e.toString(), 'error');

@@ -50,8 +50,14 @@ class _DetailPageState extends State<DetailPage> {
                 padding: const EdgeInsets.all(8),
                 decoration:
                     Utils.buildBoxDecoration(context, 10, Webservice.bgColor!),
-                child: Utils.buildEditText(context, true, widget.txn.title,
-                    'Enter Title', 'Title', onChangeName, 'Enter valid title')),
+                child: Utils.buildEditText(
+                    context,
+                    true,
+                    widget.txn.title.toString(),
+                    'Enter Title',
+                    'Title',
+                    onChangeName,
+                    'Enter valid title')),
             Utils.sizedBox(height * 0.1, 0.2),
             Container(
                 padding: const EdgeInsets.all(8),
@@ -73,7 +79,7 @@ class _DetailPageState extends State<DetailPage> {
                 child: Utils.buildEditText(
                     context,
                     true,
-                    DateFormat.yMMMEd().format(widget.txn.date),
+                    DateFormat.yMMMEd().format(widget.txn.date!),
                     'Enter Date',
                     'Date',
                     onChangeEmail,
@@ -98,8 +104,14 @@ class _DetailPageState extends State<DetailPage> {
                 padding: const EdgeInsets.all(8),
                 decoration:
                     Utils.buildBoxDecoration(context, 10, Webservice.bgColor!),
-                child: Utils.buildEditText(context, true, widget.txn.type,
-                    'Enter Type', 'Type', onChangeEmail, 'Enter valid Type')),
+                child: Utils.buildEditText(
+                    context,
+                    true,
+                    widget.txn.type.toString(),
+                    'Enter Type',
+                    'Type',
+                    onChangeEmail,
+                    'Enter valid Type')),
             Utils.sizedBox(height * 0.1, 0.5),
 
             // Center(

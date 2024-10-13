@@ -314,7 +314,7 @@ class _VarificationState extends State<Varification> {
   //show snackbar
   showSuccessSnack(BuildContext context, String msg) {
     showTopSnackBar(
-      context,
+      Overlay.of(context),
       CustomSnackBar.success(
         message: msg.isEmpty ? 'Somthing Went Wrong!' : msg,
       ),

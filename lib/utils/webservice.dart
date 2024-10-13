@@ -15,14 +15,13 @@ class Webservice {
 
   //firebase
   static fAuth.FirebaseAuth appUser = fAuth.FirebaseAuth.instance;
-  static final FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
   static const String apptoken = "123456";
   static const String appversion = "1.0.8";
   static const String devicetype = "a";
   static const String apikey = "AIzaSyCKP4esBA80tJTkGIEYXdqwzimvpBAFf70";
 
-  static bool developerMode = true;
+  static bool developerMode = false;
   static bool isExecute = false;
   static double balance = 0.0;
   static String uid = "";

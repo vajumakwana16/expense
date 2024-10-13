@@ -104,14 +104,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
     //body
     final pageBody = SafeArea(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            txChart,
-            txList,
-          ],
+      child: RefreshIndicator(
+        strokeWidth: 3,
+        edgeOffset: 20,
+        displacement: 0,
+        triggerMode: RefreshIndicatorTriggerMode.onEdge,
+        onRefresh: () => txnProvider.getTransactions(context),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              txChart,
+              txList,
+            ],
+          ),
         ),
       ),
     );

@@ -147,7 +147,7 @@ class _AuthCardState extends State<AuthCard>
 
     if (_authMode == AuthMode.Signup) {
       cwidth = width * 0.9;
-      cheight = height * 0.75;
+      cheight = height * 0.85;
     } else {
       cwidth = width * 0.9;
       cheight = height * 0.60;
